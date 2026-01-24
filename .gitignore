@@ -17,6 +17,7 @@ Thumbs.db
 *.s
 *.a
 *.lib
+main
 
 # Executables
 *.exe

@@ -1,65 +1,19 @@
-# University Programming Exercises (C & Python)
+# University Programming Repository
 
-This repository contains my **university TD (Travaux Dirigés)** and **TP (Travaux Pratiques)** solutions, written in **C** and **Python**.
+This repository contains my programming exercises and projects for university courses.
 
-The goal of this repository is to:
-- Practice fundamental programming concepts
-- Translate mathematical algorithms into code
-- Improve problem-solving skills
-- Compare low-level (C) and high-level (Python) implementations
+## Structure
 
----
-
-## 📚 Topics Covered
-
-### 🔹 Programming Fundamentals
-- Variables and data types
-- Conditional statements
-- Loops
-- Input / Output
-
-### 🔹 Arrays & Matrices
-- One-dimensional arrays
-- Two-dimensional arrays (matrices)
-- Traversal and indexing
-- Minimum / maximum with positions
-
-### 🔹 Mathematical Operations
-- Vector sum
-- Scalar (dot) product
-- Cartesian product
-- Aggregations (sum, count, min, max)
-
-### 🔹 Algorithms
-- Array reversal
-- Matrix processing
-- Single-pass algorithms
-- Position tracking
-
----
+- `exams/` – Exam exercises in C
+  - `ia_2025_2026_s1_c/` – Algorithmique et Programmation C, Semester 1
+- `td_tp/` – TD/TP exercises
+  - `c/` – C TDs
+  - `python/` – Python TDs
 
 ## 🛠 Languages Used
 
 - **C** (procedural programming, memory awareness)
 - **Python** (clean, readable implementations)
-
----
-
-## 📁 Repository Structure
-
-```
-.
-├── C/
-│ ├── td3/
-│ └── td4/
-│
-├── Python/
-│ ├── td1/
-│ ├── td3/
-│ └── td4/
-│
-└── README.md
-```
 
 ---
 
@@ -78,3 +32,7 @@ The goal of this repository is to:
 
 - Bachelor in Applied Computer Science student
 - Université Chouaïb Doukkali, El Jadida, Morocco
+
+## License
+
+This repository is licensed under the MIT License.
