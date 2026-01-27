@@ -1,6 +1,6 @@
 # Programmation Python – Exam 2025/2026 (Semester 1)
 
-This repository contains Python exercises for the IA course exam (Semester 1).
+This folder contains Python exercises for the IA course exam (Semester 1).
 
 ## Exercises
 
