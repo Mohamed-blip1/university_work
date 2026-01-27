@@ -1,6 +1,6 @@
 # University Programming Repository
 
-This repository contains my programming exercises/exams and projects for university courses.
+This repository contains my programming /exercises/exams and projects for university courses.
 
 ## Structure
 
@@ -10,7 +10,8 @@ This repository contains my programming exercises/exams and projects for univers
 - `td_tp/` – TD/TP exercises
   - `c/` – C TDs
   - `python/` – Python TDs
-
+- `projects/` - projects during univercity
+  - `student_manager/` - Student Manager project
 ## 🛠 Languages Used
 
 - **C** (procedural programming, memory awareness)
