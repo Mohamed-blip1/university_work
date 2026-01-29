@@ -1,18 +1,20 @@
-# University Programming Repository
+# University Work Repository
 
-This repository contains my programming /exercises/exams and projects for university courses.
+This repository contains my programming/electronics/exercises/exams and projects for university courses.
 
 ## Structure
 
+- `electronics` - Electronics
+  - `memory` - Memory
 - `exams/` – Exam exercises in C
   - `ia_2025_2026_s1_c/` – Algorithmique et Programmation C, Semester 1
   - `ia_2025_2026_s1_python/` – Programmation python, Semester 1
-- `td_tp/` – TD/TP exercises
-  - `c/` – C TDs
-  - `python/` – Python TDs
 - `projects/` - projects during univercity
   - `student_manager/` - Student Manager project
   - `to-do_manager/` - To-Do Manager project
+- `td_tp/` – TD/TP exercises
+  - `c/` – C TDs
+  - `python/` – Python TDs
 ## 🛠 Languages Used
 
 - **C** (procedural programming, memory awareness)
