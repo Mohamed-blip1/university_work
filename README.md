@@ -12,6 +12,7 @@ This repository contains my programming /exercises/exams and projects for univer
   - `python/` – Python TDs
 - `projects/` - projects during univercity
   - `student_manager/` - Student Manager project
+  - `to-do_manager/` - To-Do Manager project
 ## 🛠 Languages Used
 
 - **C** (procedural programming, memory awareness)
