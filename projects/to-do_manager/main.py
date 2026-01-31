@@ -1,4 +1,4 @@
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 import os
 from enum import Enum
@@ -187,11 +187,15 @@ while True:
                     with open(FILE_NAME,"r") as file:
                         for line in file:
                             line = line.strip()
-                            task_name, status_str = line.split(":")
-                            status= (status_str == "True")
-                            tasks_dict[task_name]=status
-                        up_to_date=True
-                        print("Data loaded successfully.")
+                            if line:
+                                task_name, status_str = line.split(":")
+                                status= (status_str == "True")
+                                tasks_dict[task_name]=status
+                        if tasks_dict:
+                            up_to_date=True
+                            print("Data loaded successfully.")
+                        else:
+                            print("No data to load!")
                 else:
                     print("Load operation canceled!")
             else:

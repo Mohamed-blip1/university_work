@@ -1,3 +1,7 @@
+__version__ = "1.0.1"
+
+import os
+
 students = {}
 
 while True:
@@ -42,7 +46,7 @@ while True:
                 for name, grades in students.items():
                     print(f"{name} -> {grades}")
             else:
-                print("There is not student in the list!")
+                print("There is no student in the list!")
         case 4:
             name = str(input("Enter student name: "))
             
@@ -63,17 +67,24 @@ while True:
             else:
                 print("Nothing to save!")
         case 6:
-            with open("students_file.txt",'r') as file:
-                students.clear()
-                for line in file:
-                    line = line.strip()
-                    name,grades_str=line.split(':')
-                    if grades_str:
-                        grades = [float(g) for g in grades_str.split(",")]
+            if os.path.exists("students_file.txt"):
+                with open("students_file.txt",'r') as file:
+                    students.clear()
+                    for line in file:
+                        line = line.strip()
+                        if line:
+                            name,grades_str=line.split(':')
+                            if grades_str:
+                                grades = [float(g) for g in grades_str.split(",")]
+                            else:
+                                grades=[]
+                            students[name]=grades
+                    if students:
+                        print("Data load successfully.")
                     else:
-                        grades=[]
-                    students[name]=grades
-                print("Data load successfully.")
+                        print("No data to load!")
+            else:
+                print("File does not exist!")
         case _:
             print("Invalid choice!")
     print()
