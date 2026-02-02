@@ -1,2 +1,5 @@
 mohamed:20.0
 ali:20.0
+simo:16
+mo3ad:15
+aissa:19
