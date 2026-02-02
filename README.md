@@ -4,8 +4,11 @@ This repository contains my programming/electronics/exercises/exams and projects
 
 ## Structure
 
-- `electronics` - Electronics
-  - `memory` - Memory
+- `digital_electronics/` - digital_electronics
+  - `logisim/` - logisim
+    - `alu/` - ALU
+    - `ram/` - RAM
+    - `register/` - register
 - `exams/` – Exam exercises in C
   - `ia_2025_2026_s1_c/` – Algorithmique et Programmation C, Semester 1
   - `ia_2025_2026_s1_python/` – Programmation python, Semester 1
