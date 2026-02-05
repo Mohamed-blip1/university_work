@@ -1,4 +1,4 @@
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 
 import os
 from enum import Enum
@@ -6,8 +6,12 @@ from enum import Enum
 FILE_NAME="tasks_file.txt"
 
 tasks_dict={}
+keys_sorted_by_priority=[]
 
-up_to_date=True
+ALL, COMPLETED, UNCOMPLETED = 0,1,2
+SORTED=True
+UP_TO_DATE=True
+MODIFIED_ITEM=False
 
 
 class Menu(Enum):
@@ -23,23 +27,54 @@ class Menu(Enum):
         SAVE=9
         LOAD=10
 
+def refresh_keys(force=False):
+    global SORTED, MODIFIED_ITEM, keys_sorted_by_priority
+    if MODIFIED_ITEM or force:
+        keys_sorted_by_priority=[
+            (info["priority"], task_name) for task_name, info in tasks_dict.items()]
+        MODIFIED_ITEM=False
+        SORTED=False
+
+def sort_keys(force=False):
+    global SORTED
+    if not SORTED or force:
+        keys_sorted_by_priority.sort()
+        SORTED=True
+
 def list_tasks(choice) -> bool:
+    global ALL, COMPLETED, MODIFIED_ITEM
+    refresh_keys()
+    sort_keys()
     exist=False
-    for task_name, status in tasks_dict.items():
-        if status==choice:
-            print(f"{task_name}")
+    if choice == ALL:
+        for _, task_name in keys_sorted_by_priority:
+            info=tasks_dict.get(task_name)
+            if info["done"]:
+                print(f"{task_name} : Completed.")
+            else:
+                print(f"{task_name} : Not completed.")
             exist=True
+    else:
+        choice = (choice == COMPLETED)
+        for _, task_name in keys_sorted_by_priority:
+            info=tasks_dict.get(task_name)
+            if info["done"]==choice:
+                print(f"{task_name}")
+                exist=True
     return exist
 
 def save_tasks():
+    global UP_TO_DATE
+    refresh_keys()
+    sort_keys()
     with open(FILE_NAME,"w") as file:
-        for task_name, status in tasks_dict.items():
-            if status:
-                file.write(task_name+":"+"True"+"\n")
-            else:
-                file.write(task_name+":"+"False"+"\n")
-    global up_to_date
-    up_to_date=True
+        for _, task_name in keys_sorted_by_priority:
+            info=tasks_dict.get(task_name)
+            file.write(task_name+":"+str(info["done"])+":"+str(info["priority"])+"\n")
+        file.write("end\n")
+        for  key_priority, key_name in keys_sorted_by_priority:
+            file.write(str(key_priority)+":"+key_name+"\n")
+    UP_TO_DATE=True
     print("Data Saved successfully.")
 
 while True:
@@ -53,14 +88,12 @@ while True:
     print("8 . Delete task")
     print("9 . Save")
     print("10. Load")
-    print("0 . Exit")              
-    choice = int(input(">"))     
+    print("0 . Exit")
+    choice = int(input(">"))
 
-    
     match choice:
         case Menu.EXIT.value:
-                if not up_to_date:
-                    print(up_to_date)
+                if not UP_TO_DATE:
                     exit_choice=3
                     print("What should happen to your unsaved changes")
                     print("1. Save")
@@ -82,91 +115,109 @@ while True:
                 print("Empty task name are not allowed!")
             else:
                 if task_name not in tasks_dict:
-                    tasks_dict[task_name]=False
-                    up_to_date=False
-                    print("Task added successfully.")
+                    priority=int(input("choose task priority (1-3) (1:more important): "))
+                    if priority>=1 and priority<=3:
+                        tasks_dict[task_name]={"done":False,"priority":priority}
+                        keys_sorted_by_priority.append((priority,task_name))
+                        MODIFIED_ITEM=True
+                        SORTED=False
+                        UP_TO_DATE=False
+                        print("Task added successfully.")
+                    else:
+                        print("Invalid choice!")
                 else:
                     print("Task name already exist!")
         case Menu.LIST_ALL.value:
             if tasks_dict:
-                for task_name, done in tasks_dict.items():
-                    if done:
-                        print(f"{task_name} : Completed.")
-                    else:
-                        print(f"{task_name} : Not completed.")
+                list_tasks(ALL)
             else:
                 print("No taskes yet!")
         case Menu.LIST_COMPLETED.value:
             if tasks_dict:
-                exist=list_tasks(True)
+                print("Completed tasks:")
+                exist=list_tasks(COMPLETED)
                 if not exist:
                     print("No task has been completed yet!")
             else:
                 print("No taskes yet!")
         case Menu.LIST_UNCOMPLETED.value:
             if tasks_dict:
-                exist=list_tasks(False)
+                print("Uncompleted tasks:")
+                exist=list_tasks(UNCOMPLETED)
                 if not exist:
                     print("All tasks has been completed!")
             else:
                 print("No taskes yet!")
         case Menu.SEARCH_BY_KEYWORD.value:
             keyword=input("Enter a keyword: ").strip()
-            exist=False
-            for task_name, status in tasks_dict.items():
-                if keyword.lower() in task_name.lower():
-                    exist=True
-                    if status:
-                        print(f"{task_name} : Completed.")
-                    else:
-                        print(f"{task_name} : Not completed.")
-            if not exist:
-                print("No such a task!")
+            if not keyword:
+                print("Empty keyword is not allowed!")
+            else:
+                exist=False
+                for task_name, info in tasks_dict.items():
+                    if keyword.lower() in task_name.lower():
+                        exist=True
+                        if info["done"]:
+                            print(f"{task_name} : Completed.")
+                        else:
+                            print(f"{task_name} : Not completed.")
+                if not exist:
+                    print("No such a task!")
         case Menu.MARK.value:
-            task_name = str(input("Enter task name: "))
+            task_name = str(input("Enter task name: ")).strip()
             if task_name in tasks_dict:
-                tasks_dict[task_name]=True
-                up_to_date=False
+                tasks_dict[task_name]["done"]=True
+                MODIFIED_ITEM=True
+                UP_TO_DATE=False
+                # If later were sorting based on "done" status
+                # SORTED=False
                 print("Task marked as DONE")
             else:
                 print("Task does not exist")
         case Menu.EDITE.value:
-            task_name=input("Enter task name: ")
-            if task_name in tasks_dict:
-                task_new_name=input("Enter a new name: ").strip()
-                if not task_new_name:
-                    print("Empty task name are not allowed!")
-                else:    
-                    if task_new_name in tasks_dict:
-                        print("Task name already exist.")
-                    else:    
-                        status=tasks_dict[task_name]
-                        del tasks_dict[task_name]
-                        tasks_dict[task_new_name]=status
-                        up_to_date=False
-                        print("Task name has been changed successfully.")
+            task_name=input("Enter task name: ").strip()
+            if not task_name:
+                print("Empty task name are not allowed!")
             else:
-                print("Task name does not exist!")
-
-        case Menu.DELETE.value:
-            task_name=input("Enter task name: ")
-            if task_name in tasks_dict:
-                delete_choice = 1
-                if not tasks_dict[task_name]:
-                    print("Task still uncompleted!")
-                    print("Are you sure you want to delete it?")
-                    print("1. Delete")
-                    print("2. Cancel")
-                    delete_choice = int(input(">"))
-
-                if delete_choice==1:
-                    del tasks_dict[task_name]
-                    up_to_date=False
-                    print("Task deleted successfully.")
+                if task_name in tasks_dict:
+                    task_new_name=input("Enter a new name: ").strip()
+                    if not task_new_name:
+                        print("Empty task name are not allowed!")
+                    else:
+                        if task_new_name in tasks_dict:
+                            print("Task name already exist.")
+                        else:
+                            info=tasks_dict.get(task_name)
+                            del tasks_dict[task_name]
+                            tasks_dict[task_new_name]=info
+                            MODIFIED_ITEM=True
+                            UP_TO_DATE=False
+                            print("Task name has been changed successfully.")
                 else:
-                    print("Delete operation canceled.")
+                    print("Task name does not exist!")
+        case Menu.DELETE.value:
+            task_name=input("Enter task name: ").strip()
+            if not task_name:
+                print("Empty task name are not allowed!")
             else:
-                print("Task does not exist!")
+                if task_name in tasks_dict:
+                    delete_choice = 1
+                    if not tasks_dict[task_name]["done"]:
+                        print("Task still uncompleted!")
+                        print("Are you sure you want to delete it?")
+                        print("1. Delete")
+                        print("2. Cancel")
+                        delete_choice = int(input(">"))
+
+                    if delete_choice==1:
+                        del tasks_dict[task_name]
+                        UP_TO_DATE=False
+                        MODIFIED_ITEM=True
+                        print("Task deleted successfully.")
+                    else:
+                        print("Delete operation canceled.")
+                else:
+                    print("Task does not exist!")
         case Menu.SAVE.value:
             if tasks_dict:
                save_tasks()
@@ -184,15 +235,26 @@ while True:
 
                 if load_choice == 1:
                     tasks_dict.clear()
+                    keys_sorted_by_priority.clear()
                     with open(FILE_NAME,"r") as file:
                         for line in file:
                             line = line.strip()
+                            if line == "end":
+                                break
                             if line:
-                                task_name, status_str = line.split(":")
-                                status= (status_str == "True")
-                                tasks_dict[task_name]=status
+                                task_name, done_str, priority_str = line.split(":")
+                                done= (done_str == "True")
+                                priority= int(priority_str)
+                                tasks_dict[task_name]={"done":done,"priority":priority}
+                        for line in file:
+                            line=line.strip()
+                            if line:
+                                priority_str, task_name=line.split(":")
+                                keys_sorted_by_priority.append((int(priority_str),task_name))
                         if tasks_dict:
-                            up_to_date=True
+                            # refresh_keys(True)
+                            sort_keys(True)
+                            UP_TO_DATE=True
                             print("Data loaded successfully.")
                         else:
                             print("No data to load!")
