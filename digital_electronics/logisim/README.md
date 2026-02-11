@@ -8,6 +8,17 @@ Projects:
     Opcode width: 3 bits 
     Outputs: Result, ZF, CF, OF, SF
     ```
+- CPU:
+    - RAM + MAR
+    - Register file
+    - ALU
+    - ACC
+    - Instruction register
+    - Control unit with step counter
+    - Single DATA_BUS
+    - Address bus
+    - Instruction flow: ```RAM → RF → ALU → ACC → RAM```
+    
 - RAM:
     - basic_rams : 1-bit memory with enable. 2 words, 1 bit RAM. 4 words, 1 bits RAM. 4 words, 2 bits RAM. 4 words, 4 bits RAM 
     -  16x4 bit ram

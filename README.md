@@ -7,6 +7,7 @@ This repository contains my programming/electronics/exercises/exams and projects
 - `digital_electronics/` - digital_electronics
   - `logisim/` - logisim
     - `alu/` - ALU
+    - `cpu/` - CPU design
     - `ram/` - RAM
     - `register/` - register
 - `exams/` – Exam exercises in C
